@@ -1,0 +1,29 @@
+services:
+
+  db:
+    image: postgres:16
+    container_name: ecommerce_db
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ecommerce_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+      - ./media:/app/media
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
